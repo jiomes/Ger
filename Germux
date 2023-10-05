@@ -1,0 +1,52 @@
+import datetime
+import pytz
+
+def print_date(date):
+    print(f"Original date: {date.strftime('%B %d, %Y')}")
+    
+    eastern = pytz.timezone('US/Eastern')
+    date_eastern = eastern.localize(date)
+    print(f"Eastern time: {date_eastern.strftime('%B %d, %Y %H:%M:%S %Z')}")
+
+    pacific = pytz.timezone('US/Pacific')
+    date_pacific = date_eastern.astimezone(pacific)
+    print(f"Pacific time: {date_pacific.strftime('%B %d, %Y %H:%M:%S %Z')}")
+    
+    print(f"UTC timestamp: {date.strftime('%s')}")
+
+    diff = date - datetime.datetime.now()
+    print(f"Weeks until this date: {diff.days // 7}")
+    print(f"Months until this date: {diff.days // 30}")
+
+while True:
+    print("\nMenu:")
+    print("1. Enter a date")
+    print("2. Convert date")
+    print("3. Quit")
+    choice = input("Enter your choice: ")
+
+    if choice == '1':
+        date_input = input("Enter a date (MM/DD/YYYY): ")
+        try:
+            date = datetime.datetime.strptime(date_input, "%m/%d/%Y")
+        except ValueError:
+            print("Invalid date format!")
+        else:
+            timezone = input("Enter a timezone (e.g. US/Pacific): ")
+            tz = pytz.timezone(timezone)
+            date = tz.localize(date)
+            print("Date entered successfully!")
+
+    elif choice == '2':
+        if 'date' not in locals():
+            print("Please enter a date first!")
+        else:
+            print_date(date)
+            
+    elif choice == '3':
+        break
+
+    else:
+        print("Invalid choice!")
+
+print("Goodbye!")
